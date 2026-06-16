@@ -16,7 +16,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
-    /* Custom styled color temp slider */
+    /* Custom styled color temp slider with perfect vertical thumb centering */
     input[type="range"].range-track-temp {
       -webkit-appearance: none;
       appearance: none;
@@ -29,19 +29,19 @@
     input[type="range"].range-track-temp::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: #ffffff;
-      border: 4px solid #06b6d4;
+      border: 4.5px solid #06b6d4;
       cursor: pointer;
-      margin-top: -8px; 
-      box-shadow: 0 0 14px rgba(6, 182, 212, 0.85), 0 2px 4px rgba(0,0,0,0.4);
+      margin-top: -12px; /* (8px track / 2) - (32px thumb / 2) = -12px */
+      box-shadow: 0 0 16px rgba(6, 182, 212, 0.9), 0 2px 4px rgba(0,0,0,0.4);
       position: relative;
       z-index: 50;
     }
 
-    /* Custom styled sound input range track */
+    /* Custom styled sound input range track with perfect vertical thumb centering */
     input[type="range"].range-track-sound {
       -webkit-appearance: none;
       appearance: none;
@@ -54,14 +54,14 @@
     input[type="range"].range-track-sound::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: #ffffff;
-      border: 4px solid #6366f1;
+      border: 4.5px solid #6366f1;
       cursor: pointer;
-      margin-top: -8px; 
-      box-shadow: 0 0 14px rgba(99, 102, 241, 0.85), 0 2px 4px rgba(0,0,0,0.4);
+      margin-top: -12px; /* (8px track / 2) - (32px thumb / 2) = -12px */
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.9), 0 2px 4px rgba(0,0,0,0.4);
       position: relative;
       z-index: 50;
     }
@@ -107,37 +107,40 @@
       // 0: Start Empty Screen, 1: Scene 01, 2: Scene 02-B, 3: Scene 03, 4: Scene 04
       const [currentScene, setCurrentScene] = useState(0);
       
-      // Scene 01 States
-      const [scene1Phase, setScene1Phase] = useState(0); // 0: Center title, 1: Move up & show big A/B/C buttons
+      // Animation Phases (State resets synchronously to prevent previous layout flashes)
+      const [scene1Phase, setScene1Phase] = useState(0); 
+      const [scene2Phase, setScene2Phase] = useState(0); 
+      const [scene3Phase, setScene3Phase] = useState(0); 
+      const [evolutionStep, setEvolutionStep] = useState(0); 
+      
       const [scene1Alert, setScene1Alert] = useState(false);
       const [scene1Regen, setScene1Regen] = useState(false);
-
-      // Scene 02-B States (Smooth transition & typewriter)
-      const [scene2Phase, setScene2Phase] = useState(0); // 0: Center title + setup info, 1: Move up & start typing
       const [typedQuote, setTypedQuote] = useState("");
       const quoteText = "내가 못 본 가능성이 있었다.";
 
-      // Scene 03 States (Step-by-step presentation)
-      const [scene3Phase, setScene3Phase] = useState(0); // 0: Center title only, 1: Move up & show controls
-      const [colorTemp, setColorTemp] = useState(5500); // Color Temp in Kelvin (1000K ~ 10000K)
+      const [colorTemp, setColorTemp] = useState(5500); 
       const [soundValue, setSoundValue] = useState(20);
 
-      // Scene 04 States (Re-centering organic mind-map)
-      // 0: Title Center only
-      // 1: Title Up + "문학" in exact center (50%)
-      // 2: "문학" moves left (32%) + "선택형 스토리" (68%) + Center Line active
-      // 3: "문학" (15%) + "선택형 스토리" (50%) + 4 branches (83%)
-      // 4: Show Reset & First Scene Jump Buttons
-      const [evolutionStep, setEvolutionStep] = useState(0); 
+      // --- SYNCHRONOUS SCENE TRANSITION HANDLER (Prevents ghost/flicker artifacts) ---
+      const handleSceneChange = (targetScene) => {
+        // Step 1: Instantly flush and clean all transition states before the render pass
+        setScene1Phase(0);
+        setScene2Phase(0);
+        setScene3Phase(0);
+        setEvolutionStep(0);
+        setTypedQuote("");
+        setScene1Alert(false);
+        setScene1Regen(false);
 
-      // --- AUTOMATIC TIMING AND EFFECT DISPATCHERS ---
+        // Step 2: Push navigation update immediately
+        setCurrentScene(targetScene);
+      };
+
+      // --- MOTION TIMELINE DISPATCHERS ---
 
       // SCENE 01: Center title -> Moves up & reveals big buttons
       useEffect(() => {
         if (currentScene === 1) {
-          setScene1Phase(0);
-          setScene1Alert(false);
-          setScene1Regen(false);
           const timer = setTimeout(() => {
             setScene1Phase(1);
           }, 1200);
@@ -148,18 +151,14 @@
       // SCENE 02-B: Center title -> Moves up & triggers typewriter quote
       useEffect(() => {
         if (currentScene === 2) {
-          setScene2Phase(0);
-          setTypedQuote("");
-          
           const timerPhase = setTimeout(() => {
             setScene2Phase(1);
           }, 1400);
-
           return () => clearTimeout(timerPhase);
         }
       }, [currentScene]);
 
-      // Safe Typewriter algorithm for SCENE 02-B (Guarantees correct letter output without skips)
+      // Safe Typewriter algorithm for SCENE 02-B
       useEffect(() => {
         if (currentScene === 2 && scene2Phase === 1) {
           setTypedQuote("");
@@ -170,7 +169,7 @@
             if (index >= quoteText.length) {
               clearInterval(typingInterval);
             }
-          }, 120); // Elegant typing speed
+          }, 120); 
           return () => clearInterval(typingInterval);
         }
       }, [currentScene, scene2Phase]);
@@ -178,7 +177,6 @@
       // SCENE 03: Center title ONLY -> Moves up & reveals control sliders
       useEffect(() => {
         if (currentScene === 3) {
-          setScene3Phase(0);
           const timer = setTimeout(() => {
             setScene3Phase(1);
           }, 1300);
@@ -186,10 +184,13 @@
         }
       }, [currentScene]);
 
-      // SCENE 04: Initialized Step to 0
+      // SCENE 04: Starts with step 0, automatically proceeds to step 1 after 1.2s
       useEffect(() => {
         if (currentScene === 4) {
-          setEvolutionStep(0);
+          const timer = setTimeout(() => {
+            setEvolutionStep(1);
+          }, 1200);
+          return () => clearTimeout(timer);
         }
       }, [currentScene]);
 
@@ -203,52 +204,65 @@
 
       // Scene 4 click-to-advance handler
       const handleScene4Tap = (e) => {
-        // Prevent triggering tap when clicking structural reset/home shortcut buttons
         if (e.target.closest('button')) return;
-        
-        if (evolutionStep < 4) {
+        if (evolutionStep >= 1 && evolutionStep < 4) {
           setEvolutionStep(prev => prev + 1);
         }
       };
 
-      // --- Dynamic SVG Connection Paths for Scene 04 (Based on active step) ---
-      let line1Path = "M 500 170 L 500 170"; // Default: collapsed at center
+      // --- Dynamic SVG & CSS Connection Paths for Scene 04 Branches ---
+      // Node widths: 문학/선택형 스토리 w-52 (208px, half-width is 104px)
+      // Branch cards: w-40 (160px, half-width is 80px)
+      
+      let line1Path = "M 500 170 L 500 170"; 
       let lineOpacity = 0;
+      let lineDashOffset = 400;
 
       if (evolutionStep === 2) {
-        line1Path = "M 320 170 L 680 170"; // Connecting Stage 01 and Stage 02
+        line1Path = "M 424 170 L 576 170"; // 320 + 104 to 680 - 104
         lineOpacity = 1;
+        lineDashOffset = 0;
       } else if (evolutionStep >= 3) {
-        line1Path = "M 150 170 L 500 170"; // Adjusts to Stage 01 (15%) and Stage 02 (50%)
+        line1Path = "M 254 170 L 396 170"; // 150 + 104 to 500 - 104
         lineOpacity = 1;
+        lineDashOffset = 0;
       }
 
-      // Branches sprout from "선택형 스토리" (500, 170) to 4 branch coords (830, y) at Step >= 3
       let branch1Path = "M 500 170 L 500 170";
       let branch2Path = "M 500 170 L 500 170";
       let branch3Path = "M 500 170 L 500 170";
       let branch4Path = "M 500 170 L 500 170";
       let branchesOpacity = 0;
+      let branchesDashOffset = 300;
 
+      // Adjusting the branch card column position from 83% to 75% inside 1000px viewBox
+      // Branches sprout from "선택형 스토리" (center 500, right edge is 500 + 104 = 604)
+      // Branch cards are at 75% (750 center, left edge is 750 - 80 = 670)
       if (evolutionStep >= 3) {
-        branch1Path = "M 500 170 C 590 170, 710 50, 830 50";
-        branch2Path = "M 500 170 C 590 170, 710 120, 830 120";
-        branch3Path = "M 500 170 C 590 170, 710 220, 830 220";
-        branch4Path = "M 500 170 C 590 170, 710 290, 830 290";
+        branch1Path = "M 604 170 C 630 170, 640 50, 670 50";
+        branch2Path = "M 604 170 C 630 170, 640 130, 670 130";
+        branch3Path = "M 604 170 C 630 170, 640 210, 670 210";
+        branch4Path = "M 604 170 C 670 170, 690 290, 670 290";
         branchesOpacity = 1;
+        branchesDashOffset = 0;
       }
 
       return (
         <div 
-          className="relative h-screen max-h-screen bg-[#020617] text-slate-100 font-sans overflow-hidden flex flex-col justify-between"
+          className="relative h-screen max-h-screen bg-[#020617] text-slate-100 font-sans overflow-hidden flex flex-col justify-between w-full"
           onClick={(e) => {
             // Scene 0 -> Screen Touch triggers Scene 1
             if (currentScene === 0) {
-              setCurrentScene(1);
+              handleSceneChange(1);
             }
             // Scene 2-B -> Screen Touch triggers Scene 3
             else if (currentScene === 2 && scene2Phase === 1) {
-              setCurrentScene(3);
+              handleSceneChange(3);
+            }
+            // Scene 3 -> Touch anywhere except inputs/buttons goes to Scene 4
+            else if (currentScene === 3 && scene3Phase === 1) {
+              if (e.target.closest('input') || e.target.closest('button')) return;
+              handleSceneChange(4);
             }
             // Scene 4 -> Touch advances evolution step-by-step
             else if (currentScene === 4) {
@@ -283,7 +297,7 @@
             </div>
           </header>
 
-          {/* 🎭 MAIN INTERACTIVE AREA (iPad Pro 11-inch aspect-optimized padding) */}
+          {/* 🎭 MAIN INTERACTIVE AREA */}
           <main className="relative flex-1 flex flex-col justify-center items-center px-6 md:px-16 py-4 z-30 w-full overflow-hidden">
 
             {/* SCENE 00 */}
@@ -301,12 +315,15 @@
             )}
 
             {/* SCENE 01 */}
+            {}
             {currentScene === 1 && (
-              <div className="w-full max-w-4xl flex flex-col justify-center gap-8 portrait:gap-6 landscape:gap-10 h-full py-2 transition-all duration-700 animate-fadeIn">
-                <div className={`text-center transition-all duration-[1200ms] ease-out ${
+              <div className="w-full max-w-4xl flex flex-col justify-center gap-8 portrait:gap-6 landscape:gap-10 h-full py-2 animate-fadeIn">
+                
+                {/* 🔴 ADJUSTED TITLE GLIDELINE LIMIT: Slides up exactly to the red box position (top-[36%]) */}
+                <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
                   scene1Phase === 0 
-                    ? 'translate-y-[15vh] portrait:translate-y-[18vh] landscape:translate-y-[12vh] scale-110' 
-                    : 'translate-y-0 scale-100'
+                    ? 'top-1/2 -translate-y-1/2 scale-110' 
+                    : 'top-[36%] -translate-y-1/2 scale-100'
                 }`}>
                   <div className="inline-block bg-[#002D56]/60 border border-blue-500/30 rounded-full px-4 py-1 mb-3 text-[11px] font-mono text-cyan-400 tracking-widest shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                     SCENE 01
@@ -325,11 +342,14 @@
                   )}
                 </div>
 
-                {/* Elevated Button Container: Raised up to lower-middle area, far from bottom footer */}
-                <div className={`transition-all duration-[1200ms] ease-out ${
-                  scene1Phase >= 1 ? 'opacity-100 translate-y-[-4vh] portrait:translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
+                {/* Sub components are only rendered safely when title is ready to slide up */}
+                {/* 🔴 ADJUSTED BUTTONS CONTAINER: Positioned dynamically relative to the screen center (top-[60%]) */}
+                <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-4xl transition-all duration-[1200ms] ease-out z-20 ${
+                  scene1Phase >= 1 
+                    ? 'top-[60%] -translate-y-1/2 opacity-100' 
+                    : 'top-[65%] -translate-y-1/2 opacity-0 pointer-events-none'
                 }`}>
-                  <div className="grid grid-cols-3 gap-4 portrait:gap-3 landscape:gap-6">
+                  <div className="grid grid-cols-3 gap-4 portrait:gap-3 landscape:gap-6 px-4">
                     <button
                       onClick={() => setScene1Alert(true)}
                       className="group relative bg-[#090d1a]/80 hover:bg-red-950/20 border-2 border-slate-800 hover:border-red-500/60 rounded-2xl py-8 portrait:py-5 landscape:py-8 px-4 transition-all duration-300 text-center active:scale-[0.98] shadow-lg"
@@ -342,9 +362,9 @@
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setCurrentScene(2);
+                        handleSceneChange(2);
                       }}
-                      className="group relative bg-[#002D56]/40 hover:bg-[#002D56]/70 border-2 border-cyan-500/40 hover:border-cyan-400 rounded-2xl py-8 portrait:py-5 landscape:py-8 px-4 transition-all duration-300 text-center active:scale-[0.98] shadow-[0_0_25px_rgba(6,182,212,0.15)]"
+                      className="group relative bg-[#002D56]/40 hover:bg-[#002D56]/70 border-2 border-cyan-500/40 hover:border-cyan-400/40 rounded-2xl py-8 portrait:py-5 landscape:py-8 px-4 transition-all duration-300 text-center active:scale-[0.98] shadow-[0_0_25px_rgba(6,182,212,0.15)]"
                     >
                       <span className="text-lg md:text-2xl portrait:text-base landscape:text-lg xl:text-2xl font-black text-cyan-300 group-hover:text-white tracking-wide transition-colors block">
                         B. 분석한다
@@ -383,12 +403,14 @@
             )}
 
             {/* SCENE 02-B */}
+            {/* */}
             {currentScene === 2 && (
-              <div className="w-full max-w-4xl flex flex-col justify-between h-full py-4 cursor-pointer group animate-fadeIn">
-                <div className={`text-center transition-all duration-[1200ms] ease-out ${
+              <div className="w-full max-w-4xl flex flex-col justify-between h-full py-4 animate-fadeIn">
+                {/* 🔴 ADJUSTED TITLE GLIDELINE LIMIT: Slides up exactly to the red box position (top-[22%]) */}
+                <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
                   scene2Phase === 0 
-                    ? 'translate-y-[15vh] portrait:translate-y-[18vh] landscape:translate-y-[10vh] scale-105' 
-                    : 'translate-y-0 scale-100'
+                    ? 'top-1/2 -translate-y-1/2 scale-110' 
+                    : 'top-[22%] -translate-y-1/2 scale-100'
                 }`}>
                   <div className="inline-block bg-[#002D56]/60 border border-blue-500/30 rounded-full px-4 py-1.5 mb-3 text-[11px] font-mono text-cyan-400 tracking-widest shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                     SCENE 02-B
@@ -407,21 +429,25 @@
                   </div>
                 </div>
 
-                <div className={`my-8 portrait:my-12 landscape:my-8 text-center py-12 portrait:py-20 landscape:py-12 px-8 bg-[#002D56]/10 border-2 border-cyan-500/20 rounded-3xl relative overflow-hidden transition-all duration-[1200ms] ease-out ${
-                  scene2Phase >= 1 ? 'opacity-100 scale-100 translate-y-0 shadow-[0_0_40px_rgba(6,182,212,0.15)]' : 'opacity-0 scale-95 translate-y-12 pointer-events-none'
+                {/* 🔴 ENLARGED SPATIAL GAP: Spaced out significantly to top-[55%] to leave enough room below setup badges */}
+                <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-3xl text-center py-12 px-8 bg-[#002D56]/10 border-2 border-cyan-500/20 rounded-3xl overflow-hidden transition-all duration-[1200ms] ease-out ${
+                  scene2Phase >= 1 
+                    ? 'opacity-100 scale-100 top-[55%] -translate-y-1/2 shadow-[0_0_40px_rgba(6,182,212,0.15)]' 
+                    : 'opacity-0 scale-95 top-[58%] -translate-y-1/2 pointer-events-none'
                 }`}>
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-500/5 via-transparent to-transparent pointer-events-none" />
                   <span className="text-slate-500 text-xs block font-mono tracking-widest mb-3">
                     [ UNCOVERED PROVECT ]
                   </span>
                   
-                  <h2 className="text-2xl md:text-5xl portrait:text-2xl landscape:text-3xl xl:text-5xl font-black text-white tracking-tight drop-shadow-[0_4px_25px_rgba(6,182,212,0.3)] min-h-[60px] flex items-center justify-center">
+                  <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight drop-shadow-[0_4px_25px_rgba(6,182,212,0.3)] min-h-[60px] flex items-center justify-center">
                     <span>{typedQuote}</span>
                     <span className="inline-block w-1.5 h-8 md:h-12 bg-cyan-400 ml-1.5 animate-pulse" />
                   </h2>
                 </div>
 
-                <div className={`mt-auto text-center transition-all duration-[1000ms] delay-300 ${scene2Phase >= 1 ? 'opacity-100 mb-4' : 'opacity-0'}`}>
+                {/* Touch hint properly aligned at bottom container */}
+                <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-center transition-all duration-[1000ms] delay-300 ${scene2Phase >= 1 ? 'opacity-100' : 'opacity-0'}`}>
                   <p className="text-xs font-mono text-cyan-400 animate-pulse tracking-widest uppercase">
                     ⚡ 화면 아무 곳이나 터치하여 다음으로 진행
                   </p>
@@ -430,12 +456,14 @@
             )}
 
             {/* SCENE 03 */}
+            {/* */}
             {currentScene === 3 && (
               <div className="w-full max-w-4xl flex flex-col justify-between h-full py-4 animate-fadeIn">
-                <div className={`text-center transition-all duration-[1200ms] ease-out ${
+                {/* 🔴 ADJUSTED TITLE GLIDELINE LIMIT: Slides up exactly to the red box position (top-[22%]) */}
+                <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
                   scene3Phase === 0 
-                    ? 'translate-y-[15vh] portrait:translate-y-[18vh] landscape:translate-y-[10vh] scale-110' 
-                    : 'translate-y-0 scale-100'
+                    ? 'top-1/2 -translate-y-1/2 scale-110' 
+                    : 'top-[22%] -translate-y-1/2 scale-100'
                 }`}>
                   <div className="inline-block bg-[#002D56]/50 border border-blue-500/30 rounded-full px-4 py-1 mb-3 text-[11px] font-mono text-cyan-400 tracking-widest">
                     SCENE 03
@@ -445,11 +473,14 @@
                   </h1>
                 </div>
 
-                <div className={`my-6 space-y-4 portrait:space-y-8 landscape:space-y-4 transition-all duration-[1200ms] ease-out w-full max-w-3xl mx-auto ${
-                  scene3Phase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
+                {/* 🔴 ENLARGED SPATIAL GAP: Shifted control panels down to top-[57%] to make room below title */}
+                <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-3xl space-y-6 portrait:space-y-10 landscape:space-y-6 transition-all duration-[1200ms] ease-out ${
+                  scene3Phase >= 1 
+                    ? 'opacity-100 scale-100 top-[57%] -translate-y-1/2' 
+                    : 'opacity-0 scale-95 top-[62%] -translate-y-1/2 pointer-events-none'
                 }`}>
-                  {/* 조명 색온도 (Range: 1000K to 10000K) */}
-                  <div className="bg-[#090d1a]/95 border border-cyan-500/15 hover:border-cyan-400/30 p-5 rounded-2xl transition-all duration-300 shadow-lg">
+                  {/* 조명 색온도 (Range: 1000K to 10000K with perfect thumb alignment) */}
+                  <div className="bg-[#090d1a]/95 border border-cyan-500/15 hover:border-cyan-400/30 p-6 rounded-2xl transition-all duration-300 shadow-lg">
                     <div className="flex justify-between items-center mb-3">
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
@@ -460,12 +491,14 @@
                     
                     <div className="flex items-center gap-4">
                       <button 
-                        onClick={() => setColorTemp(Math.max(1000, colorTemp - 500))} 
-                        className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-lg transition-colors flex items-center justify-center font-bold"
+                        onClick={(e) => { e.stopPropagation(); setColorTemp(Math.max(1000, colorTemp - 500)); }}
+                        className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-xl transition-colors flex items-center justify-center font-bold"
                       >
                         -
                       </button>
-                      <div className="flex-1 relative py-4 flex items-center justify-center">
+                      
+                      {/* 🔴 SLIDER THUMB VERTICAL BALANCE: margin-top adjusted to -12px to match exactly with range track center */}
+                      <div className="flex-1 relative py-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                         <input 
                           type="range" 
                           min="1000" 
@@ -476,9 +509,10 @@
                           className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer range-track-temp outline-none"
                         />
                       </div>
+                      
                       <button 
-                        onClick={() => setColorTemp(Math.min(10000, colorTemp + 500))} 
-                        className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-lg transition-colors flex items-center justify-center font-bold"
+                        onClick={(e) => { e.stopPropagation(); setColorTemp(Math.min(10000, colorTemp + 500)); }}
+                        className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-xl transition-colors flex items-center justify-center font-bold"
                       >
                         +
                       </button>
@@ -486,7 +520,7 @@
                   </div>
 
                   {/* 사운드 변화 */}
-                  <div className="bg-[#090d1a]/95 border border-blue-500/15 hover:border-blue-400/30 p-5 rounded-2xl transition-all duration-300 shadow-lg">
+                  <div className="bg-[#090d1a]/95 border border-blue-500/15 hover:border-blue-400/30 p-6 rounded-2xl transition-all duration-300 shadow-lg">
                     <div className="flex justify-between items-center mb-3">
                       <div className="flex items-center gap-3">
                         <SoundWaveIcon />
@@ -497,12 +531,14 @@
                     
                     <div className="flex items-center gap-4">
                       <button 
-                        onClick={() => setSoundValue(Math.max(0, soundValue - 5))} 
-                        className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-lg transition-colors flex items-center justify-center font-bold"
+                        onClick={(e) => { e.stopPropagation(); setSoundValue(Math.max(0, soundValue - 5)); }}
+                        className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-xl transition-colors flex items-center justify-center font-bold"
                       >
                         -
                       </button>
-                      <div className="flex-1 relative py-4 flex items-center justify-center">
+                      
+                      {/* 🔴 SLIDER THUMB VERTICAL BALANCE: margin-top adjusted to -12px to match exactly with range track center */}
+                      <div className="flex-1 relative py-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                         <input 
                           type="range" 
                           min="0" 
@@ -512,9 +548,10 @@
                           className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer range-track-sound outline-none"
                         />
                       </div>
+                      
                       <button 
-                        onClick={() => setSoundValue(Math.min(100, soundValue + 5))} 
-                        className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-lg transition-colors flex items-center justify-center font-bold"
+                        onClick={(e) => { e.stopPropagation(); setSoundValue(Math.min(100, soundValue + 5)); }}
+                        className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-xl transition-colors flex items-center justify-center font-bold"
                       >
                         +
                       </button>
@@ -522,14 +559,13 @@
                   </div>
                 </div>
 
-                <div className={`mt-auto text-center transition-all duration-[1200ms] ease-out ${
-                  scene3Phase >= 1 ? 'opacity-100 translate-y-0 mb-4' : 'opacity-0 translate-y-16 pointer-events-none'
+                <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-center transition-all duration-[1200ms] ease-out ${
+                  scene3Phase >= 1 ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      setCurrentScene(4);
-                      setEvolutionStep(0);
+                      handleSceneChange(4);
                     }}
                     className="inline-block px-12 py-3.5 text-base font-mono text-cyan-400 animate-pulse tracking-widest uppercase transition-all duration-300 hover:text-cyan-300"
                   >
@@ -542,15 +578,16 @@
             {/* SCENE 04 (iPad 11" Optimized Viewport Box) */}
             {currentScene === 4 && (
               <div className="w-full max-w-5xl flex flex-col justify-between h-full py-2 animate-fadeIn overflow-hidden">
-                <div className={`text-center transition-all duration-[1200ms] ease-out ${
+                {/* Flawless centering matching SCENE 01 perfectly */}
+                <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
                   evolutionStep === 0 
-                    ? 'translate-y-[12vh] portrait:translate-y-[15vh] landscape:translate-y-[10vh] scale-110' 
-                    : 'translate-y-0 scale-100'
+                    ? 'top-1/2 -translate-y-1/2 scale-110' 
+                    : 'top-[16%] -translate-y-1/2 scale-100'
                 }`}>
                   <div className="inline-block bg-[#002D56]/60 border border-blue-500/20 rounded-full px-4 py-1.5 mb-1.5 text-xs font-mono text-cyan-300 tracking-widest shadow-[0_0_15px_rgba(6,182,212,0.1)]">
                     SCENE 04 (FINAL EVOLUTION)
                   </div>
-                  <h1 className="text-xl md:text-3xl portrait:text-xl landscape:text-2xl xl:text-3xl font-black text-white">
+                  <h1 className="text-2xl md:text-3xl font-black text-white">
                     문학에서 최첨단 뉴미디어 콘텐츠로의 진화 과정
                   </h1>
                   <p className="text-[10px] text-slate-500 font-mono mt-0.5">
@@ -558,159 +595,208 @@
                   </p>
                 </div>
 
-                <div className={`my-2 flex items-center justify-center transition-all duration-[1200ms] ease-out ${
-                  evolutionStep >= 1 ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-16 pointer-events-none'
+                {/* Sub-container containing the mindmap only shows when active (Step >= 1) */}
+                <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-4xl transition-all duration-[1200ms] ease-out ${
+                  evolutionStep >= 1 
+                    ? 'opacity-100 scale-100 top-[55%] -translate-y-1/2' 
+                    : 'opacity-0 scale-95 top-[60%] -translate-y-1/2 pointer-events-none'
                 }`}>
                   
-                  {/* Height perfectly restricted dynamically based on layout to prevent scrollbars */}
-                  <div className="relative w-full h-[280px] portrait:h-[420px] landscape:h-[280px] xl:h-[340px] max-w-4xl bg-[#090d1a]/30 rounded-3xl border border-slate-900/60 overflow-hidden shadow-inner">
+                  {/* Height optimized, shifted downwards slightly for absolute centering */}
+                  <div className="relative w-full h-[340px] portrait:h-[420px] landscape:h-[340px] xl:h-[340px] bg-[#090d1a]/30 rounded-3xl border border-slate-900/60 overflow-hidden shadow-inner">
+                    
+                    {/* SVG curves for the 4 final branches starting exactly from Stage 02 Center */}
                     <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 1000 340" preserveAspectRatio="none">
                       
-                      {/* --- ROOT LINE 1 (문학 ➜ 선택형 스토리) --- */}
-                      <path 
-                        d={line1Path}
-                        fill="none" 
-                        stroke="#10b981" 
-                        strokeWidth="20" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: lineOpacity * 0.25, filter: 'blur(8px)' }}
-                      />
-                      <path 
-                        d={line1Path}
-                        fill="none" 
-                        stroke="#10b981" 
-                        strokeWidth="10" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: lineOpacity * 0.55, filter: 'blur(3px)' }}
-                      />
-                      <path 
-                        d={line1Path}
-                        fill="none" 
-                        stroke="#34d399" 
-                        strokeWidth="4" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: lineOpacity }}
-                      />
-
-                      {/* --- BRANCH 1 --- */}
+                      {/* --- BRANCH 1 (영상) --- */}
                       <path 
                         d={branch1Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.25, 
+                          filter: 'blur(8px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch1Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.55, 
+                          filter: 'blur(3px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch1Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity,
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
 
-                      {/* --- BRANCH 2 --- */}
+                      {/* --- BRANCH 2 (게임) --- */}
                       <path 
                         d={branch2Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.25, 
+                          filter: 'blur(8px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch2Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.55, 
+                          filter: 'blur(3px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch2Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity,
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
 
-                      {/* --- BRANCH 3 --- */}
+                      {/* --- BRANCH 3 (전시) --- */}
                       <path 
                         d={branch3Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.25, 
+                          filter: 'blur(8px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch3Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.55, 
+                          filter: 'blur(3px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch3Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity,
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
 
-                      {/* --- BRANCH 4 --- */}
+                      {/* --- BRANCH 4 (체험형 콘텐츠) --- */}
                       <path 
                         d={branch4Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.25, 
+                          filter: 'blur(8px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch4Path}
                         fill="none" 
                         stroke="#06b6d4" 
                         strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity * 0.55, 
+                          filter: 'blur(3px)',
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                       <path 
                         d={branch4Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-in-out"
-                        style={{ opacity: branchesOpacity }}
+                        className="transition-all duration-[1000ms] ease-out"
+                        style={{ 
+                          opacity: branchesOpacity,
+                          strokeDasharray: '400',
+                          strokeDashoffset: branchesDashOffset
+                        }}
                       />
                     </svg>
 
+                    {/* --- HARDWARE-ACCELERATED SYNCHRONIZED CONNECTING LINE (Grows and slides in perfect sync) --- */}
+                    <div 
+                      className="absolute h-1 bg-[#10b981] rounded-full transition-all duration-[1000ms] ease-in-out shadow-[0_0_15px_rgba(16,185,129,0.7)] z-10"
+                      style={{
+                        left: evolutionStep === 2 ? '424px' : '254px',
+                        width: evolutionStep === 0 || evolutionStep === 1 ? '0px' : evolutionStep === 2 ? '152px' : '142px',
+                        top: '170px',
+                        transform: 'translateY(-50%)',
+                        opacity: evolutionStep >= 2 ? 1 : 0,
+                      }}
+                    />
+
+                    {/* Node Cards (Bulkier, larger with optimized text, balanced padding) */}
                     <div className="absolute inset-0 z-20">
-                      {/* Node 1: 문학 (Initially positioned at 50% for Stage 0 and 1, slides left dynamically) */}
+                      
+                      {/* Node 1: 문학 (Bulkier proportions, perfectly centered) */}
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: (evolutionStep === 0 || evolutionStep === 1) ? '50%' : evolutionStep === 2 ? '32%' : '15%',
-                          top: '50%',
+                          left: (evolutionStep === 0 || evolutionStep === 1) ? '50%' : evolutionStep === 2 ? '320px' : '150px',
+                          top: '170px',
                           opacity: evolutionStep >= 1 ? 1 : 0,
                           transform: `translate(-50%, -50%) scale(${evolutionStep >= 1 ? 1 : 0.85})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-4 py-3 portrait:px-3 portrait:py-2.5 w-36 portrait:w-28 landscape:w-32 md:landscape:w-40 text-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
-                          <span className="text-[9px] md:text-[10px] font-mono text-emerald-400 block mb-0.5">STAGE 01</span>
-                          <h3 className="text-base md:text-lg font-black text-white tracking-widest">문학</h3>
+                        <div className="bg-[#020617] border-[3px] border-emerald-400 rounded-3xl w-[208px] h-[100px] flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
+                          <span className="text-[10px] md:text-[11px] font-mono text-emerald-400 block mb-1">STAGE 01</span>
+                          <h3 className="text-xl md:text-2xl font-black text-white tracking-widest leading-none">문학</h3>
                         </div>
                       </div>
 
@@ -718,31 +804,31 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: evolutionStep === 2 ? '68%' : '50%',
-                          top: '50%',
+                          left: evolutionStep === 2 ? '680px' : '500px',
+                          top: '170px',
                           opacity: evolutionStep >= 2 ? 1 : 0,
                           transform: `translate(-50%, -50%) scale(${evolutionStep >= 2 ? 1 : 0.85})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-4 py-3 portrait:px-3 portrait:py-2.5 w-40 portrait:w-32 landscape:w-36 md:landscape:w-44 text-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
-                          <span className="text-[9px] md:text-[10px] font-mono text-emerald-400 block mb-0.5">STAGE 02</span>
-                          <h3 className="text-sm md:text-base font-black text-emerald-200 tracking-wide">선택형 스토리</h3>
+                        <div className="bg-[#020617] border-[3px] border-[#10b981] rounded-3xl w-[208px] h-[100px] flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
+                          <span className="text-[10px] md:text-[11px] font-mono text-[#10b981] block mb-1">STAGE 02</span>
+                          <h3 className="text-base md:text-lg font-black text-emerald-200 tracking-wide leading-none">선택형 스토리</h3>
                         </div>
                       </div>
 
-                      {/* Stage 3 Branch Nodes (Positioned absolutely using precise percentages matching SVG heights) */}
+                      {/* Stage 3 Branch Nodes (Positioned absolutely using precise percentages, balanced spacing) */}
                       {/* branch 1: 영상 */}
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '83%',
-                          top: '14.7%',
+                          left: '830px',
+                          top: '50px',
                           opacity: evolutionStep >= 3 ? 1 : 0,
                           transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-3 py-1.5 portrait:px-2 portrait:py-1 w-28 portrait:w-22 landscape:w-28 md:landscape:w-36 text-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                          <span className="text-[8px] md:text-[9px] font-mono text-cyan-400 block mb-0.5">MEDIA</span>
+                        <div className="bg-[#020617] border-[2.5px] border-cyan-500 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
+                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">MEDIA</span>
                           <h4 className="text-xs md:text-sm font-bold text-white">영상</h4>
                         </div>
                       </div>
@@ -751,14 +837,14 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '83%',
-                          top: '35.3%',
+                          left: '830px',
+                          top: '130px',
                           opacity: evolutionStep >= 3 ? 1 : 0,
                           transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-3 py-1.5 portrait:px-2 portrait:py-1 w-28 portrait:w-22 landscape:w-28 md:landscape:w-36 text-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                          <span className="text-[8px] md:text-[9px] font-mono text-cyan-400 block mb-0.5">GAME</span>
+                        <div className="bg-[#020617] border-[2.5px] border-cyan-500 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
+                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">GAME</span>
                           <h4 className="text-xs md:text-sm font-bold text-white">게임</h4>
                         </div>
                       </div>
@@ -767,14 +853,14 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '83%',
-                          top: '64.7%',
+                          left: '830px',
+                          top: '210px',
                           opacity: evolutionStep >= 3 ? 1 : 0,
                           transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-3 py-1.5 portrait:px-2 portrait:py-1 w-28 portrait:w-22 landscape:w-28 md:landscape:w-36 text-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                          <span className="text-[8px] md:text-[9px] font-mono text-cyan-400 block mb-0.5">EXHIBITION</span>
+                        <div className="bg-[#020617] border-[2.5px] border-cyan-500 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
+                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">EXHIBITION</span>
                           <h4 className="text-xs md:text-sm font-bold text-white">전시</h4>
                         </div>
                       </div>
@@ -783,22 +869,23 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '83%',
-                          top: '85.3%',
+                          left: '830px',
+                          top: '290px',
                           opacity: evolutionStep >= 3 ? 1 : 0,
                           transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#002d56] border-2 border-cyan-400 rounded-xl px-3 py-1.5 portrait:px-2 portrait:py-1 w-28 portrait:w-22 landscape:w-28 md:landscape:w-36 text-center shadow-[0_0_25px_rgba(6,182,212,0.5)]">
-                          <span className="text-[8px] md:text-[9px] font-mono text-cyan-300 block mb-0.5">INTERACT</span>
-                          <h4 className="text-[10px] md:text-xs font-black text-cyan-100">체험형 콘텐츠</h4>
+                        <div className="bg-[#002d56] border-[2.5px] border-cyan-400 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_30px_rgba(6,182,212,0.65)]">
+                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-300 block mb-0.5">INTERACT</span>
+                          <h4 className="text-sm font-black text-cyan-100">체험형 콘텐츠</h4>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="text-center mt-auto min-h-[50px] flex items-center justify-center">
+                {/* Step Progression and System Reset panel */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center min-h-[50px] flex items-center justify-center">
                   {evolutionStep < 4 ? (
                     <div className="bg-slate-900/60 inline-block px-8 py-2.5 rounded-full border border-cyan-500/10 shadow-lg animate-pulse mb-2">
                       <p className="text-xs font-mono text-cyan-400 tracking-widest uppercase">
@@ -810,7 +897,7 @@
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          setEvolutionStep(0);
+                          setEvolutionStep(1);
                         }}
                         className="bg-slate-900 hover:bg-slate-800 border border-slate-700 px-6 py-2.5 rounded-xl text-xs font-bold transition-all text-slate-300 flex items-center gap-2"
                       >
@@ -819,7 +906,7 @@
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          setCurrentScene(0); // 00. 초기화 상태로 완벽하게 복귀
+                          handleSceneChange(0); // 00. 초기화 상태로 완벽하게 복귀
                         }}
                         className="bg-[#002D56] hover:bg-cyan-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)]"
                       >
@@ -831,9 +918,7 @@
               </div>
             )}
 
-          </main>
-
-          {/* 🛠️ CONTROLLER FOOTER */}
+          {/* 🛠— CONTROLLER FOOTER */}
           <footer className="relative z-40 bg-[#020617] border-t border-slate-900/60 px-6 py-4 flex flex-wrap justify-between items-center gap-4 text-xs">
             <div className="flex items-center gap-2">
               <span className="font-mono text-[10px] text-slate-500 uppercase tracking-widest">Scene Jump:</span>
@@ -849,8 +934,7 @@
                     key={scene.id}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setCurrentScene(scene.id);
-                      if (scene.id === 4) setEvolutionStep(0);
+                      handleSceneChange(scene.id);
                     }}
                     className={`px-3 py-1.5 rounded-lg font-bold text-[10px] font-mono transition-all ${
                       currentScene === scene.id 
