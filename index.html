@@ -218,12 +218,14 @@
       let lineOpacity = 0;
       let lineDashOffset = 400;
 
+      // [문학]에서 [선택형 스토리]로 이어지는 중앙 라인 수정
       if (evolutionStep === 2) {
-        line1Path = "M 424 170 L 576 170"; // 320 + 104 to 680 - 104
+        // 문학 박스 우측 끝(424px)에서 선택형 스토리 좌측 끝(576px)까지 연결
+        line1Path = "M 424 170 L 576 170";
         lineOpacity = 1;
         lineDashOffset = 0;
       } else if (evolutionStep >= 3) {
-        line1Path = "M 254 170 L 396 170"; // 150 + 104 to 500 - 104
+        line1Path = "M 254 170 L 396 170";
         lineOpacity = 1;
         lineDashOffset = 0;
       }
@@ -235,13 +237,13 @@
       let branchesOpacity = 0;
       let branchesDashOffset = 300;
 
+      // [선택형 스토리]에서 4개 콘텐츠로 뻗어 나가는 가지선 수정
       if (evolutionStep >= 3) {
-        // Selection Story is at center 500, right edge is 500 + 104 = 604
-        // Branch cards are at 830, left edge is 830 - 80 = 750
-        branch1Path = "M 604 170 C 670 170, 690 50, 750 50";
-        branch2Path = "M 604 170 C 670 170, 690 130, 750 130";
-        branch3Path = "M 604 170 C 670 170, 690 210, 750 210";
-        branch4Path = "M 604 170 C 670 170, 690 290, 750 290";
+        // 선택형 스토리 우측 끝(604px)에서 시작하여 각 콘텐츠의 좌측 끝(750px)으로 연결
+        branch1Path = "M 604 170 C 670 170, 710 50, 750 50";
+        branch2Path = "M 604 170 C 670 170, 710 130, 750 130";
+        branch3Path = "M 604 170 C 670 170, 710 210, 750 210";
+        branch4Path = "M 604 170 C 670 170, 710 290, 750 290";
         branchesOpacity = 1;
         branchesDashOffset = 0;
       }
