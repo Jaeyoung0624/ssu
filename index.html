@@ -774,13 +774,13 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: (evolutionStep === 0 || evolutionStep === 1) ? '50%' : evolutionStep === 2 ? '320px' : '150px',
-                          top: '170px',
+                          left: (evolutionStep === 0 || evolutionStep === 1) ? '50%' : evolutionStep === 2 ? '32%' : '15%',
+                          top: '50%',
                           opacity: evolutionStep >= 1 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 1 ? 1 : 0.85})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 1 ? 1.05 : 0.85})`
                         }}
                       >
-                        <div className="bg-[#020617] border-[3px] border-emerald-400 rounded-3xl w-[208px] h-[100px] flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
+                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-6 py-4.5 w-52 portrait:w-36 landscape:w-48 md:landscape:w-52 h-28 flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
                           <span className="text-[10px] md:text-[11px] font-mono text-emerald-400 block mb-1">STAGE 01</span>
                           <h3 className="text-xl md:text-2xl font-black text-white tracking-widest leading-none">문학</h3>
                         </div>
@@ -790,14 +790,14 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: evolutionStep === 2 ? '680px' : '500px',
-                          top: '170px',
+                          left: evolutionStep === 2 ? '68%' : '50%',
+                          top: '50%',
                           opacity: evolutionStep >= 2 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 2 ? 1 : 0.85})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 2 ? 1.05 : 0.85})`
                         }}
                       >
-                        <div className="bg-[#020617] border-[3px] border-[#10b981] rounded-3xl w-[208px] h-[100px] flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
-                          <span className="text-[10px] md:text-[11px] font-mono text-[#10b981] block mb-1">STAGE 02</span>
+                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-6 py-4.5 w-52 portrait:w-40 landscape:w-48 md:landscape:w-52 h-28 flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
+                          <span className="text-[10px] md:text-[11px] font-mono text-emerald-400 block mb-1">STAGE 02</span>
                           <h3 className="text-base md:text-lg font-black text-emerald-200 tracking-wide leading-none">선택형 스토리</h3>
                         </div>
                       </div>
