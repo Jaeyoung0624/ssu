@@ -235,14 +235,13 @@
       let branchesOpacity = 0;
       let branchesDashOffset = 300;
 
-      // Adjusting the branch card column position from 83% to 75% inside 1000px viewBox
-      // Branches sprout from "선택형 스토리" (center 500, right edge is 500 + 104 = 604)
-      // Branch cards are at 75% (750 center, left edge is 750 - 80 = 670)
       if (evolutionStep >= 3) {
-        branch1Path = "M 604 170 C 630 170, 640 50, 670 50";
-        branch2Path = "M 604 170 C 630 170, 640 130, 670 130";
-        branch3Path = "M 604 170 C 630 170, 640 210, 670 210";
-        branch4Path = "M 604 170 C 670 170, 690 290, 670 290";
+        // Selection Story is at center 500, right edge is 500 + 104 = 604
+        // Branch cards are at 830, left edge is 830 - 80 = 750
+        branch1Path = "M 604 170 C 670 170, 690 50, 750 50";
+        branch2Path = "M 604 170 C 670 170, 690 130, 750 130";
+        branch3Path = "M 604 170 C 670 170, 690 210, 750 210";
+        branch4Path = "M 604 170 C 670 170, 690 290, 750 290";
         branchesOpacity = 1;
         branchesDashOffset = 0;
       }
@@ -315,15 +314,13 @@
             )}
 
             {/* SCENE 01 */}
-            {}
             {currentScene === 1 && (
               <div className="w-full max-w-4xl flex flex-col justify-center gap-8 portrait:gap-6 landscape:gap-10 h-full py-2 animate-fadeIn">
-                
-                {/* 🔴 ADJUSTED TITLE GLIDELINE LIMIT: Slides up exactly to the red box position (top-[36%]) */}
+                {/* Flawless centering - moves up strictly to the red box top edge */}
                 <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
                   scene1Phase === 0 
                     ? 'top-1/2 -translate-y-1/2 scale-110' 
-                    : 'top-[36%] -translate-y-1/2 scale-100'
+                    : 'top-[26%] -translate-y-1/2 scale-100'
                 }`}>
                   <div className="inline-block bg-[#002D56]/60 border border-blue-500/30 rounded-full px-4 py-1 mb-3 text-[11px] font-mono text-cyan-400 tracking-widest shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                     SCENE 01
@@ -343,13 +340,10 @@
                 </div>
 
                 {/* Sub components are only rendered safely when title is ready to slide up */}
-                {/* 🔴 ADJUSTED BUTTONS CONTAINER: Positioned dynamically relative to the screen center (top-[60%]) */}
-                <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-4xl transition-all duration-[1200ms] ease-out z-20 ${
-                  scene1Phase >= 1 
-                    ? 'top-[60%] -translate-y-1/2 opacity-100' 
-                    : 'top-[65%] -translate-y-1/2 opacity-0 pointer-events-none'
+                <div className={`transition-all duration-[1200ms] ease-out mt-12 ${
+                  scene1Phase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
                 }`}>
-                  <div className="grid grid-cols-3 gap-4 portrait:gap-3 landscape:gap-6 px-4">
+                  <div className="grid grid-cols-3 gap-4 portrait:gap-3 landscape:gap-6">
                     <button
                       onClick={() => setScene1Alert(true)}
                       className="group relative bg-[#090d1a]/80 hover:bg-red-950/20 border-2 border-slate-800 hover:border-red-500/60 rounded-2xl py-8 portrait:py-5 landscape:py-8 px-4 transition-all duration-300 text-center active:scale-[0.98] shadow-lg"
@@ -364,7 +358,7 @@
                         e.stopPropagation();
                         handleSceneChange(2);
                       }}
-                      className="group relative bg-[#002D56]/40 hover:bg-[#002D56]/70 border-2 border-cyan-500/40 hover:border-cyan-400/40 rounded-2xl py-8 portrait:py-5 landscape:py-8 px-4 transition-all duration-300 text-center active:scale-[0.98] shadow-[0_0_25px_rgba(6,182,212,0.15)]"
+                      className="group relative bg-[#002D56]/40 hover:bg-[#002D56]/70 border-2 border-cyan-500/40 hover:border-cyan-400 rounded-2xl py-8 portrait:py-5 landscape:py-8 px-4 transition-all duration-300 text-center active:scale-[0.98] shadow-[0_0_25px_rgba(6,182,212,0.15)]"
                     >
                       <span className="text-lg md:text-2xl portrait:text-base landscape:text-lg xl:text-2xl font-black text-cyan-300 group-hover:text-white tracking-wide transition-colors block">
                         B. 분석한다
@@ -403,10 +397,9 @@
             )}
 
             {/* SCENE 02-B */}
-            {/* */}
             {currentScene === 2 && (
               <div className="w-full max-w-4xl flex flex-col justify-between h-full py-4 animate-fadeIn">
-                {/* 🔴 ADJUSTED TITLE GLIDELINE LIMIT: Slides up exactly to the red box position (top-[22%]) */}
+                {/* Flawless centering matching SCENE 01 exactly */}
                 <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
                   scene2Phase === 0 
                     ? 'top-1/2 -translate-y-1/2 scale-110' 
@@ -429,10 +422,10 @@
                   </div>
                 </div>
 
-                {/* 🔴 ENLARGED SPATIAL GAP: Spaced out significantly to top-[55%] to leave enough room below setup badges */}
+                {/* Sub-quote content with comfortable widened margin spacing (mt-20) */}
                 <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-3xl text-center py-12 px-8 bg-[#002D56]/10 border-2 border-cyan-500/20 rounded-3xl overflow-hidden transition-all duration-[1200ms] ease-out ${
                   scene2Phase >= 1 
-                    ? 'opacity-100 scale-100 top-[55%] -translate-y-1/2 shadow-[0_0_40px_rgba(6,182,212,0.15)]' 
+                    ? 'opacity-100 scale-100 top-[52%] -translate-y-1/2 shadow-[0_0_40px_rgba(6,182,212,0.15)]' 
                     : 'opacity-0 scale-95 top-[58%] -translate-y-1/2 pointer-events-none'
                 }`}>
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-500/5 via-transparent to-transparent pointer-events-none" />
@@ -456,10 +449,9 @@
             )}
 
             {/* SCENE 03 */}
-            {/* */}
             {currentScene === 3 && (
               <div className="w-full max-w-4xl flex flex-col justify-between h-full py-4 animate-fadeIn">
-                {/* 🔴 ADJUSTED TITLE GLIDELINE LIMIT: Slides up exactly to the red box position (top-[22%]) */}
+                {/* Flawless centering matching SCENE 01 perfectly */}
                 <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
                   scene3Phase === 0 
                     ? 'top-1/2 -translate-y-1/2 scale-110' 
@@ -473,11 +465,11 @@
                   </h1>
                 </div>
 
-                {/* 🔴 ENLARGED SPATIAL GAP: Shifted control panels down to top-[57%] to make room below title */}
+                {/* Shifting control panels slightly downwards (top-[55%]) to prevent overlap with title */}
                 <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-3xl space-y-6 portrait:space-y-10 landscape:space-y-6 transition-all duration-[1200ms] ease-out ${
                   scene3Phase >= 1 
-                    ? 'opacity-100 scale-100 top-[57%] -translate-y-1/2' 
-                    : 'opacity-0 scale-95 top-[62%] -translate-y-1/2 pointer-events-none'
+                    ? 'opacity-100 scale-100 top-[55%] -translate-y-1/2' 
+                    : 'opacity-0 scale-95 top-[60%] -translate-y-1/2 pointer-events-none'
                 }`}>
                   {/* 조명 색온도 (Range: 1000K to 10000K with perfect thumb alignment) */}
                   <div className="bg-[#090d1a]/95 border border-cyan-500/15 hover:border-cyan-400/30 p-6 rounded-2xl transition-all duration-300 shadow-lg">
@@ -496,8 +488,6 @@
                       >
                         -
                       </button>
-                      
-                      {/* 🔴 SLIDER THUMB VERTICAL BALANCE: margin-top adjusted to -12px to match exactly with range track center */}
                       <div className="flex-1 relative py-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                         <input 
                           type="range" 
@@ -509,7 +499,6 @@
                           className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer range-track-temp outline-none"
                         />
                       </div>
-                      
                       <button 
                         onClick={(e) => { e.stopPropagation(); setColorTemp(Math.min(10000, colorTemp + 500)); }}
                         className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-xl transition-colors flex items-center justify-center font-bold"
@@ -536,8 +525,6 @@
                       >
                         -
                       </button>
-                      
-                      {/* 🔴 SLIDER THUMB VERTICAL BALANCE: margin-top adjusted to -12px to match exactly with range track center */}
                       <div className="flex-1 relative py-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                         <input 
                           type="range" 
@@ -548,7 +535,6 @@
                           className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer range-track-sound outline-none"
                         />
                       </div>
-                      
                       <button 
                         onClick={(e) => { e.stopPropagation(); setSoundValue(Math.min(100, soundValue + 5)); }}
                         className="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 font-mono text-xl transition-colors flex items-center justify-center font-bold"
@@ -821,13 +807,13 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '830px',
-                          top: '50px',
+                          left: '83%',
+                          top: '14.7%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-[2.5px] border-cyan-500 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
+                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
                           <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">MEDIA</span>
                           <h4 className="text-xs md:text-sm font-bold text-white">영상</h4>
                         </div>
@@ -837,13 +823,13 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '830px',
-                          top: '130px',
+                          left: '83%',
+                          top: '38.2%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-[2.5px] border-cyan-500 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
+                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
                           <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">GAME</span>
                           <h4 className="text-xs md:text-sm font-bold text-white">게임</h4>
                         </div>
@@ -853,13 +839,13 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '830px',
-                          top: '210px',
+                          left: '83%',
+                          top: '61.8%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-[2.5px] border-cyan-500 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
+                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
                           <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">EXHIBITION</span>
                           <h4 className="text-xs md:text-sm font-bold text-white">전시</h4>
                         </div>
@@ -869,13 +855,13 @@
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
-                          left: '830px',
-                          top: '290px',
+                          left: '83%',
+                          top: '85.3%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#002d56] border-[2.5px] border-cyan-400 rounded-xl px-5 py-2.5 w-40 text-center shadow-[0_0_30px_rgba(6,182,212,0.65)]">
+                        <div className="bg-[#002d56] border-2 border-cyan-400 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_30px_rgba(6,182,212,0.65)]">
                           <span className="text-[9px] md:text-[10px] font-mono text-cyan-300 block mb-0.5">INTERACT</span>
                           <h4 className="text-sm font-black text-cyan-100">체험형 콘텐츠</h4>
                         </div>
@@ -917,6 +903,8 @@
                 </div>
               </div>
             )}
+
+          </main>
 
           {/* 🛠— CONTROLLER FOOTER */}
           <footer className="relative z-40 bg-[#020617] border-t border-slate-900/60 px-6 py-4 flex flex-wrap justify-between items-center gap-4 text-xs">
