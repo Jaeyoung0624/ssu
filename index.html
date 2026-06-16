@@ -204,50 +204,28 @@
 
       // Scene 4 click-to-advance handler
       const handleScene4Tap = (e) => {
+        // Prevent triggering tap when clicking structural reset/home shortcut buttons
         if (e.target.closest('button')) return;
-        if (evolutionStep >= 1 && evolutionStep < 4) {
+        
+        if (evolutionStep < 4) {
           setEvolutionStep(prev => prev + 1);
         }
       };
 
- // --- Dynamic SVG & CSS Connection Paths for Scene 04 Branches ---
-      // Node widths: 문학/선택형 스토리 w-52 (208px, half-width is 104px)
-      // Branch cards: w-40 (160px, half-width is 80px)
-      
-      let line1Path = "M 500 170 L 500 170"; 
-      let lineOpacity = 0;
-      let lineDashOffset = 400;
-
-      // [문학]에서 [선택형 스토리]로 이어지는 중앙 라인 수정
-      if (evolutionStep === 2) {
-        // 문학 박스 우측 끝(424px)에서 선택형 스토리 좌측 끝(576px)까지 연결
-        line1Path = "M 424 170 L 576 170";
-        lineOpacity = 1;
-        lineDashOffset = 0;
-      } else if (evolutionStep >= 3) {
-        // [문학]이 왼쪽으로 이동했을 때의 좌표(중심 250px 기준 우측 끝 354px)에서 시작
-        line1Path = "M 354 170 L 396 170";
-        lineOpacity = 1;
-        lineDashOffset = 0;
-      }
-
+      // --- Dynamic SVG Connection Paths for Scene 04 Branches ---
+      // Sprouts smoothly from Stage 02 Center (500, 170) to Stage 03 Cards (830, y)
       let branch1Path = "M 500 170 L 500 170";
       let branch2Path = "M 500 170 L 500 170";
       let branch3Path = "M 500 170 L 500 170";
       let branch4Path = "M 500 170 L 500 170";
       let branchesOpacity = 0;
-      let branchesDashOffset = 300;
 
-      // [선택형 스토리]에서 4개 콘텐츠로 뻗어 나가는 가지선 수정
       if (evolutionStep >= 3) {
-        // 선택형 스토리 우측 끝(604px)에서 시작하여 각 콘텐츠의 좌측 끝(670px)으로 연결
-        // 670px은 콘텐츠 박스(w-40, 160px)의 좌측 끝(750px - 80px = 670px)입니다.
-        branch1Path = "M 604 170 C 640 170, 650 50, 670 50";
-        branch2Path = "M 604 170 C 640 170, 650 130, 670 130";
-        branch3Path = "M 604 170 C 640 170, 650 210, 670 210";
-        branch4Path = "M 604 170 C 640 170, 650 290, 670 290";
+        branch1Path = "M 500 170 C 590 170, 710 50, 830 50";
+        branch2Path = "M 500 170 C 590 170, 710 130, 830 130";
+        branch3Path = "M 500 170 C 590 170, 710 210, 830 210";
+        branch4Path = "M 500 170 C 590 170, 710 290, 830 290";
         branchesOpacity = 1;
-        branchesDashOffset = 0;
       }
 
       return (
@@ -256,16 +234,17 @@
           onClick={(e) => {
             // Scene 0 -> Screen Touch triggers Scene 1
             if (currentScene === 0) {
-              handleSceneChange(1);
+              setCurrentScene(1);
             }
             // Scene 2-B -> Screen Touch triggers Scene 3
             else if (currentScene === 2 && scene2Phase === 1) {
-              handleSceneChange(3);
+              setCurrentScene(3);
             }
             // Scene 3 -> Touch anywhere except inputs/buttons goes to Scene 4
             else if (currentScene === 3 && scene3Phase === 1) {
               if (e.target.closest('input') || e.target.closest('button')) return;
-              handleSceneChange(4);
+              setCurrentScene(4);
+              setEvolutionStep(0);
             }
             // Scene 4 -> Touch advances evolution step-by-step
             else if (currentScene === 4) {
