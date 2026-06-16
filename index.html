@@ -564,208 +564,158 @@
                   </p>
                 </div>
 
-                {/* Sub-container containing the mindmap only shows when active (Step >= 1) */}
-                <div className={`absolute left-1/2 -translate-x-1/2 w-full max-w-4xl transition-all duration-[1200ms] ease-out ${
-                  evolutionStep >= 1 
-                    ? 'opacity-100 scale-100 top-[55%] -translate-y-1/2' 
-                    : 'opacity-0 scale-95 top-[60%] -translate-y-1/2 pointer-events-none'
+                <div className={`my-4 flex items-center justify-center transition-all duration-[1200ms] ease-out ${
+                  evolutionStep >= 1 ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-16 pointer-events-none'
                 }`}>
                   
-                  {/* Height optimized, shifted downwards slightly for absolute centering */}
-                  <div className="relative w-full h-[340px] portrait:h-[420px] landscape:h-[340px] xl:h-[340px] bg-[#090d1a]/30 rounded-3xl border border-slate-900/60 overflow-hidden shadow-inner">
-                    
-                    {/* SVG curves for the 4 final branches starting exactly from Stage 02 Center */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 1000 340" preserveAspectRatio="none">
+                  <div className="relative w-full h-[400px] max-w-4xl bg-[#090d1a]/30 rounded-3xl border border-slate-900/60 overflow-hidden shadow-inner">
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 1000 400" preserveAspectRatio="none">
                       
-                      {/* --- BRANCH 1 (영상) --- */}
+                      {/* --- ROOT LINE 1 (문학 ➜ 선택형 스토리) --- */}
+                      <path 
+                        d={line1Path}
+                        fill="none" 
+                        stroke="#10b981" 
+                        strokeWidth="22" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: lineOpacity * 0.25, filter: 'blur(8px)' }}
+                      />
+                      <path 
+                        d={line1Path}
+                        fill="none" 
+                        stroke="#10b981" 
+                        strokeWidth="11" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: lineOpacity * 0.55, filter: 'blur(3px)' }}
+                      />
+                      <path 
+                        d={line1Path}
+                        fill="none" 
+                        stroke="#34d399" 
+                        strokeWidth="4" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: lineOpacity }}
+                      />
+
+                      {/* --- BRANCH 1 --- */}
                       <path 
                         d={branch1Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.25, 
-                          filter: 'blur(8px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="20" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
                       />
                       <path 
                         d={branch1Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.55, 
-                          filter: 'blur(3px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="10" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
                       />
                       <path 
                         d={branch1Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity,
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity }}
                       />
 
-                      {/* --- BRANCH 2 (게임) --- */}
+                      {/* --- BRANCH 2 --- */}
                       <path 
                         d={branch2Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.25, 
-                          filter: 'blur(8px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="20" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
                       />
                       <path 
                         d={branch2Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.55, 
-                          filter: 'blur(3px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="10" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
                       />
                       <path 
                         d={branch2Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity,
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity }}
                       />
 
-                      {/* --- BRANCH 3 (전시) --- */}
+                      {/* --- BRANCH 3 --- */}
                       <path 
                         d={branch3Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.25, 
-                          filter: 'blur(8px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="20" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
                       />
                       <path 
                         d={branch3Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.55, 
-                          filter: 'blur(3px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="10" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
                       />
                       <path 
                         d={branch3Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity,
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity }}
                       />
 
-                      {/* --- BRANCH 4 (체험형 콘텐츠) --- */}
+                      {/* --- BRANCH 4 --- */}
                       <path 
                         d={branch4Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="18" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.25, 
-                          filter: 'blur(8px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="20" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.25, filter: 'blur(8px)' }}
                       />
                       <path 
                         d={branch4Path}
                         fill="none" 
                         stroke="#06b6d4" 
-                        strokeWidth="9" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity * 0.55, 
-                          filter: 'blur(3px)',
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        strokeWidth="10" 
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity * 0.55, filter: 'blur(3px)' }}
                       />
                       <path 
                         d={branch4Path}
                         fill="none" 
                         stroke="#22d3ee" 
                         strokeWidth="3.5" 
-                        className="transition-all duration-[1000ms] ease-out"
-                        style={{ 
-                          opacity: branchesOpacity,
-                          strokeDasharray: '400',
-                          strokeDashoffset: branchesDashOffset
-                        }}
+                        className="transition-all duration-[1000ms] ease-in-out"
+                        style={{ opacity: branchesOpacity }}
                       />
                     </svg>
 
-                    {/* --- HARDWARE-ACCELERATED SYNCHRONIZED CONNECTING LINE (Grows and slides in perfect sync) --- */}
-                    <div 
-                      className="absolute h-1 bg-[#10b981] rounded-full transition-all duration-[1000ms] ease-in-out shadow-[0_0_15px_rgba(16,185,129,0.7)] z-10"
-                      style={{
-                        left: evolutionStep === 2 ? '424px' : '254px',
-                        width: evolutionStep === 0 || evolutionStep === 1 ? '0px' : evolutionStep === 2 ? '152px' : '142px',
-                        top: '170px',
-                        transform: 'translateY(-50%)',
-                        opacity: evolutionStep >= 2 ? 1 : 0,
-                      }}
-                    />
-
-                    {/* Node Cards (Bulkier, larger with optimized text, balanced padding) */}
                     <div className="absolute inset-0 z-20">
-                      
-                      {/* Node 1: 문학 (Bulkier proportions, perfectly centered) */}
+                      {/* Node 1: 문학 */}
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
                           left: (evolutionStep === 0 || evolutionStep === 1) ? '50%' : evolutionStep === 2 ? '32%' : '15%',
                           top: '50%',
                           opacity: evolutionStep >= 1 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 1 ? 1.05 : 0.85})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 1 ? 1 : 0.85})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-6 py-4.5 w-52 portrait:w-36 landscape:w-48 md:landscape:w-52 h-28 flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
-                          <span className="text-[10px] md:text-[11px] font-mono text-emerald-400 block mb-1">STAGE 01</span>
-                          <h3 className="text-xl md:text-2xl font-black text-white tracking-widest leading-none">문학</h3>
+                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-6 py-4 w-40 text-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
+                          <span className="text-[10px] font-mono text-emerald-400 block mb-1">STAGE 01</span>
+                          <h3 className="text-lg font-black text-white tracking-widest">문학</h3>
                         </div>
                       </div>
 
@@ -776,29 +726,28 @@
                           left: evolutionStep === 2 ? '68%' : '50%',
                           top: '50%',
                           opacity: evolutionStep >= 2 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 2 ? 1.05 : 0.85})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 2 ? 1 : 0.85})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-6 py-4.5 w-52 portrait:w-40 landscape:w-48 md:landscape:w-52 h-28 flex flex-col justify-center items-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
-                          <span className="text-[10px] md:text-[11px] font-mono text-emerald-400 block mb-1">STAGE 02</span>
-                          <h3 className="text-base md:text-lg font-black text-emerald-200 tracking-wide leading-none">선택형 스토리</h3>
+                        <div className="bg-[#020617] border-2 border-emerald-400 rounded-2xl px-6 py-4 w-44 text-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
+                          <span className="text-[10px] font-mono text-emerald-400 block mb-1">STAGE 02</span>
+                          <h3 className="text-base font-black text-emerald-200 tracking-wide">선택형 스토리</h3>
                         </div>
                       </div>
 
-                      {/* Stage 3 Branch Nodes (Positioned absolutely using precise percentages, balanced spacing) */}
                       {/* branch 1: 영상 */}
                       <div 
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
                           left: '83%',
-                          top: '14.7%',
+                          top: '15%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
-                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">MEDIA</span>
-                          <h4 className="text-xs md:text-sm font-bold text-white">영상</h4>
+                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 text-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                          <span className="text-[9px] font-mono text-cyan-400 block mb-0.5">MEDIA</span>
+                          <h4 className="text-sm font-bold text-white">영상</h4>
                         </div>
                       </div>
 
@@ -807,14 +756,14 @@
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
                           left: '83%',
-                          top: '38.2%',
+                          top: '38%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
-                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">GAME</span>
-                          <h4 className="text-xs md:text-sm font-bold text-white">게임</h4>
+                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 text-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                          <span className="text-[9px] font-mono text-cyan-400 block mb-0.5">GAME</span>
+                          <h4 className="text-sm font-bold text-white">게임</h4>
                         </div>
                       </div>
 
@@ -823,14 +772,14 @@
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
                           left: '83%',
-                          top: '61.8%',
+                          top: '62%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_20px_rgba(6,182,212,0.45)]">
-                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-400 block mb-0.5">EXHIBITION</span>
-                          <h4 className="text-xs md:text-sm font-bold text-white">전시</h4>
+                        <div className="bg-[#020617] border-2 border-cyan-500 rounded-xl px-5 py-2.5 w-36 text-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                          <span className="text-[9px] font-mono text-cyan-400 block mb-0.5">EXHIBITION</span>
+                          <h4 className="text-sm font-bold text-white">전시</h4>
                         </div>
                       </div>
 
@@ -839,13 +788,13 @@
                         className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-[1000ms] ease-in-out"
                         style={{ 
                           left: '83%',
-                          top: '85.3%',
+                          top: '85%',
                           opacity: evolutionStep >= 3 ? 1 : 0,
-                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1.05 : 0.8})`
+                          transform: `translate(-50%, -50%) scale(${evolutionStep >= 3 ? 1 : 0.8})`
                         }}
                       >
-                        <div className="bg-[#002d56] border-2 border-cyan-400 rounded-xl px-5 py-2.5 w-36 portrait:w-28 landscape:w-36 md:landscape:w-40 text-center shadow-[0_0_30px_rgba(6,182,212,0.65)]">
-                          <span className="text-[9px] md:text-[10px] font-mono text-cyan-300 block mb-0.5">INTERACT</span>
+                        <div className="bg-[#002d56] border-2 border-cyan-400 rounded-xl px-5 py-2.5 w-36 text-center shadow-[0_0_25px_rgba(6,182,212,0.5)]">
+                          <span className="text-[9px] font-mono text-cyan-300 block mb-0.5">INTERACT</span>
                           <h4 className="text-sm font-black text-cyan-100">체험형 콘텐츠</h4>
                         </div>
                       </div>
@@ -853,31 +802,30 @@
                   </div>
                 </div>
 
-                {/* Step Progression and System Reset panel */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center min-h-[50px] flex items-center justify-center">
+                <div className="text-center mt-auto min-h-[50px] flex items-center justify-center">
                   {evolutionStep < 4 ? (
-                    <div className="bg-slate-900/60 inline-block px-8 py-2.5 rounded-full border border-cyan-500/10 shadow-lg animate-pulse mb-2">
-                      <p className="text-xs font-mono text-cyan-400 tracking-widest uppercase">
+                    <div className="bg-slate-900/60 inline-block px-8 py-3.5 rounded-full border border-cyan-500/10 shadow-lg animate-pulse">
+                      <p className="text-sm font-mono text-cyan-400 tracking-widest uppercase">
                         👉 화면 아무 곳이나 터치하여 뿌리 진화 진행
                       </p>
                     </div>
                   ) : (
-                    <div className="flex justify-center gap-4 animate-fadeIn mb-2">
+                    <div className="flex justify-center gap-4 animate-fadeIn">
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          setEvolutionStep(1);
+                          setEvolutionStep(0);
                         }}
-                        className="bg-slate-900 hover:bg-slate-800 border border-slate-700 px-6 py-2.5 rounded-xl text-xs font-bold transition-all text-slate-300 flex items-center gap-2"
+                        className="bg-slate-900 hover:bg-slate-800 border border-slate-700 px-6 py-3.5 rounded-xl text-xs font-bold transition-all text-slate-300 flex items-center gap-2"
                       >
                         🔄 진화 리셋 (재촬영용)
                       </button>
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleSceneChange(0); // 00. 초기화 상태로 완벽하게 복귀
+                          setCurrentScene(1);
                         }}
-                        className="bg-[#002D56] hover:bg-cyan-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)]"
+                        className="bg-[#002D56] hover:bg-cyan-600 text-white px-6 py-3.5 rounded-xl text-xs font-bold transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)]"
                       >
                         🔄 첫 씬으로 이동
                       </button>
