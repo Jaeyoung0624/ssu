@@ -82,7 +82,10 @@
 
   <!-- 브라우저 컴파일용 Babel 스크립트 블록 (import 구문 완벽 배제) -->
   <script type="text/babel">
-    const { useState, useEffect } = React;
+  // React와 ReactDOM이 전역(window)에 로드될 때까지 대기
+  function startApp() {
+    const { useState, useEffect, useRef, useCallback } = React;
+    const root = ReactDOM.createRoot(document.getElementById('root'));
 
     const SoundWaveIcon = () => (
       <div className="flex items-end gap-1 h-5 w-6 pb-0.5" style={{ minWidth: '24px' }}>
@@ -560,6 +563,8 @@
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
-  </script>
+  // 문서 로드 완료 시 초기화 호출
+  window.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
