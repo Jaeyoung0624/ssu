@@ -7,51 +7,49 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { background-color: #020617; color: white; overflow: hidden; font-family: sans-serif; }
-    .fade-in { animation: fadeIn 1s ease-in; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .scene { transition: opacity 0.5s ease-in-out; }
   </style>
 </head>
 <body>
-  <div id="app" class="h-screen w-full flex flex-col items-center justify-center p-6 text-center">
-    <!-- 초기 화면 -->
-    <div id="content" class="fade-in">
-      <h1 class="text-4xl font-black text-cyan-400 mb-6">SOONGSIL AI</h1>
-      <p class="text-slate-400 mb-8">숭실대학교의 미래, AI 융합의 시작</p>
-      <button id="startBtn" class="px-8 py-4 bg-cyan-600 hover:bg-cyan-500 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(6,182,212,0.5)]">
-        시작하기
-      </button>
+  <div id="app" class="h-screen w-full flex flex-col items-center justify-between p-6">
+    
+    <!-- 메인 콘텐츠 영역 -->
+    <div id="main-content" class="flex-grow flex flex-col items-center justify-center scene">
+      <h1 id="title" class="text-3xl font-black text-cyan-400">SOONGSIL AI</h1>
+      <p id="desc" class="text-slate-400 mt-2">융합 캠페인 모듈을 시작합니다.</p>
     </div>
+
+    <!-- 하단 내비게이션 바 -->
+    <footer class="w-full pb-4 border-t border-slate-800 pt-4">
+      <div class="flex gap-2 justify-center overflow-x-auto">
+        <button onclick="changeScene(0)" class="px-3 py-1 bg-slate-900 border border-slate-700 rounded text-[10px]">00.초기화</button>
+        <button onclick="changeScene(1)" class="px-3 py-1 bg-slate-900 border border-slate-700 rounded text-[10px]">01.AI발견</button>
+        <button onclick="changeScene(2)" class="px-3 py-1 bg-slate-900 border border-slate-700 rounded text-[10px]">02.분석</button>
+        <button onclick="changeScene(3)" class="px-3 py-1 bg-slate-900 border border-slate-700 rounded text-[10px]">03.센서</button>
+        <button onclick="changeScene(4)" class="px-3 py-1 bg-slate-900 border border-slate-700 rounded text-[10px]">04.진화</button>
+      </div>
+    </footer>
   </div>
 
   <script>
-    const app = document.getElementById('app');
-    const content = document.getElementById('content');
-    const startBtn = document.getElementById('startBtn');
+    const scenes = [
+      { title: "SOONGSIL AI", desc: "융합 캠페인 모듈을 시작합니다." },
+      { title: "01. AI 발견", desc: "주변의 AI 흔적을 탐지하세요." },
+      { title: "02. 분석 루트", desc: "데이터 패턴을 분석 중입니다." },
+      { title: "03. 센서 입력", desc: "사용자 인터랙션을 감지합니다." },
+      { title: "04. 진화 단계", desc: "최종 AI 형태가 구현됩니다." }
+    ];
 
-    // 단계별 화면 전환 로직
-    startBtn.onclick = () => {
-      content.classList.add('opacity-0');
+    function changeScene(index) {
+      const main = document.getElementById('main-content');
+      main.style.opacity = 0;
+      
       setTimeout(() => {
-        content.innerHTML = `
-          <div class="space-y-6">
-            <div class="w-20 h-20 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <h2 class="text-2xl font-bold">시스템 분석 중...</h2>
-            <div class="w-full max-w-xs bg-slate-800 h-2 rounded-full overflow-hidden">
-              <div class="h-full bg-cyan-500 animate-[pulse_2s_infinite]"></div>
-            </div>
-          </div>
-        `;
-        content.classList.remove('opacity-0');
-        
-        // 2초 후 최종 메인 화면 표시
-        setTimeout(() => {
-          content.innerHTML = `
-            <h1 class="text-3xl font-bold text-white">준비 완료!</h1>
-            <p class="mt-4 text-cyan-300">숭실대 AI 융합 캠페인에 오신 것을 환영합니다.</p>
-          `;
-        }, 2000);
+        document.getElementById('title').innerText = scenes[index].title;
+        document.getElementById('desc').innerText = scenes[index].desc;
+        main.style.opacity = 1;
       }, 500);
-    };
+    }
   </script>
 </body>
 </html>
