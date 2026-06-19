@@ -2,24 +2,19 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Soongsil AI Media - Scenario Prop Control</title>
     
-    <!-- React & ReactDOM CDN -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
     
-    <!-- Babel CDN (Browser JSX Transpiler) -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
     
-    <!-- Tailwind CSS Playback CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Tailwind Custom Extension Config
         tailwind.config = {
             theme: {
                 extend: {
-                    // JSX 내의 커스텀 애니메이션 클래스가 정상 작동하도록 주입
                     animation: {
                         'audio-bar-1': 'audio-bar-1 0.75s ease-in-out infinite',
                         'audio-bar-2': 'audio-bar-2 0.65s ease-in-out infinite',
@@ -33,6 +28,16 @@
     </script>
 
     <style>
+        /* 기본 배경색 강제 지정 및 꽉 찬 화면 설정 */
+        html, body, #root {
+          background-color: #020617 !important;
+          margin: 0;
+          padding: 0;
+          height: 100vh;
+          width: 100vw;
+          overflow: hidden;
+        }
+
         /* 커스텀 Range 슬라이더 및 키프레임 스타일 */
         input[type="range"].range-track-temp {
           -webkit-appearance: none;
@@ -91,11 +96,9 @@
 </head>
 <body class="bg-[#020617] text-slate-100 overflow-hidden select-none">
 
-    <!-- React가 렌더링될 루트 엘리먼트 -->
     <div id="root"></div>
 
-    <!-- Babel 스크립트 타입으로 React 컴포넌트 작성 -->
-    <script type="text/babel">
+    <script type="text/babel" data-presets="react">
         const { useState, useEffect } = React;
 
         // --- CUSTOM ANIMATED AUDIO WAVE ICON FOR SCENE 03 ---
@@ -558,9 +561,11 @@
           );
         }
 
-        // React 18 루트 생성 및 렌더링
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // 브라우저 렌더링 타이밍 안전화 보정
+        window.addEventListener('DOMContentLoaded', () => {
+          const root = ReactDOM.createRoot(document.getElementById('root'));
+          root.render(<App />);
+        });
     </script>
 </body>
 </html>
