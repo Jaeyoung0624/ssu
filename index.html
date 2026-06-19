@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Soongsil AI Media - Scenario Prop Control</title>
     
-    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js" crossorigin></script>
     
-    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js" crossorigin></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -28,7 +28,6 @@
     </script>
 
     <style>
-        /* 기본 배경색 강제 지정 및 꽉 찬 화면 설정 */
         html, body, #root {
           background-color: #020617 !important;
           margin: 0;
@@ -38,7 +37,6 @@
           overflow: hidden;
         }
 
-        /* 커스텀 Range 슬라이더 및 키프레임 스타일 */
         input[type="range"].range-track-temp {
           -webkit-appearance: none;
           appearance: none;
@@ -98,10 +96,9 @@
 
     <div id="root"></div>
 
-    <script type="text/babel" data-presets="react">
+    <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- CUSTOM ANIMATED AUDIO WAVE ICON FOR SCENE 03 ---
         const SoundWaveIcon = () => (
           <div className="flex items-end gap-1 h-5 w-6 pb-0.5" style={{ minWidth: '24px' }}>
             <span className="w-1 bg-cyan-400 rounded-full animate-audio-bar-1"></span>
@@ -250,13 +247,11 @@
                 else if (currentScene === 4) handleScene4Tap(e);
               }}
             >
-              {/* 🌌 AMBIENT BACKGROUND GLOWS */}
               <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#002d56]/50 blur-[130px] pointer-events-none" />
               <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[50%] rounded-full bg-cyan-950/40 blur-[140px] pointer-events-none" />
               <div className="absolute top-[35%] left-[30%] w-[35%] h-[35%] rounded-full bg-blue-950/30 blur-[160px] pointer-events-none" />
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#0ea5e908_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e908_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
-              {/* 📟 HEADER */}
               <header className="relative z-40 px-8 py-4 flex justify-between items-center border-b border-blue-900/10 bg-[#020617]/75 backdrop-blur-md">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#002D56] to-cyan-500 flex items-center justify-center font-black text-cyan-200 text-xs tracking-widest shadow-[0_0_20px_rgba(6,182,212,0.35)]">SSU</div>
@@ -271,7 +266,6 @@
                 </div>
               </header>
 
-              {/* 🎭 MAIN INTERACTIVE AREA */}
               <main className="relative flex-1 flex flex-col justify-center items-center px-6 md:px-16 py-4 z-30 w-full overflow-hidden">
                 {currentScene === 0 && (
                   <div className="w-full flex flex-col items-center justify-center h-full py-12 animate-[fadeIn_0.8s_ease-out_forwards] cursor-pointer">
@@ -284,7 +278,6 @@
                   </div>
                 )}
 
-                {/* SCENE 01 */}
                 {currentScene === 1 && (
                   <div className={`w-full max-w-4xl flex flex-col justify-center items-center h-full py-2 animate-[fadeIn_0.8s_ease-out_forwards] ${!isSceneReady ? 'opacity-0' : ''}`}>
                     <div className={`transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl mb-8 ${
@@ -330,7 +323,6 @@
                   </div>
                 )}
 
-                {/* SCENE 02-B */}
                 {currentScene === 2 && (
                   <div className={`w-full max-w-4xl flex flex-col justify-between h-full py-4 cursor-pointer group animate-[fadeIn_0.8s_ease-out_forwards] ${!isSceneReady ? 'opacity-0' : ''}`}>
                     <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
@@ -361,7 +353,6 @@
                   </div>
                 )}
 
-                {/* SCENE 03 */}
                 {currentScene === 3 && (
                   <div className={`w-full max-w-4xl flex flex-col justify-between h-full py-4 animate-[fadeIn_0.8s_ease-out_forwards] ${!isSceneReady ? 'opacity-0' : ''}`}>
                     <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
@@ -415,7 +406,6 @@
                   </div>
                 )}
 
-                {/* SCENE 04 */}
                 {currentScene === 4 && (
                   <div className={`w-full max-w-5xl flex flex-col justify-between h-full py-2 animate-[fadeIn_0.8s_ease-out_forwards] ${!isSceneReady ? 'opacity-0' : ''} overflow-hidden`}>
                     <div className={`absolute left-1/2 -translate-x-1/2 transition-all duration-[1200ms] ease-out z-30 text-center w-full max-w-3xl ${
@@ -529,7 +519,6 @@
                 )}
               </main>
 
-              {/* 🛠— CONTROLLER FOOTER */}
               <footer className="relative z-40 bg-[#020617] border-t border-slate-900/60 px-6 py-4 flex flex-wrap justify-between items-center gap-4 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-[10px] text-slate-500 uppercase tracking-widest">Scene Jump:</span>
@@ -561,11 +550,20 @@
           );
         }
 
-        // 브라우저 렌더링 타이밍 안전화 보정
-        window.addEventListener('DOMContentLoaded', () => {
-          const root = ReactDOM.createRoot(document.getElementById('root'));
-          root.render(<App />);
-        });
+        // DOM 로드 완료 후 안전하게 주입 실행
+        const initApp = () => {
+          const rootElement = document.getElementById('root');
+          if (rootElement && window.ReactDOM && window.React) {
+            const root = ReactDOM.createRoot(rootElement);
+            root.render(<App />);
+          }
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+          initApp();
+        }
     </script>
 </body>
 </html>
