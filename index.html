@@ -7,9 +7,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js" crossorigin></script>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -209,21 +207,22 @@
             }
           };
 
-          let line1Path = "M 500 200 L 500 200"; 
+          // --- 🍎 iOS Safari 모션 튀는 현상 방지를 위해 명령어 구조 단일화 (L ➜ C 구조 변환) ---
+          let line1Path = "M 500 200 C 500 200, 500 200, 500 200"; 
           let lineOpacity = 0;
 
           if (evolutionStep === 2) {
-            line1Path = "M 400 200 L 592 200";
+            line1Path = "M 400 200 C 464 200, 528 200, 592 200";
             lineOpacity = 1;
           } else if (evolutionStep >= 3) {
-            line1Path = "M 230 200 L 412 200";
+            line1Path = "M 230 200 C 290 200, 351 200, 412 200";
             lineOpacity = 1;
           }
 
-          let branch1Path = "M 500 200 L 500 200";
-          let branch2Path = "M 500 200 L 500 200";
-          let branch3Path = "M 500 200 L 500 200";
-          let branch4Path = "M 500 200 L 500 200";
+          let branch1Path = "M 500 200 C 500 200, 500 200, 500 200";
+          let branch2Path = "M 500 200 C 500 200, 500 200, 500 200";
+          let branch3Path = "M 500 200 C 500 200, 500 200, 500 200";
+          let branch4Path = "M 500 200 C 500 200, 500 200, 500 200";
           let branchesOpacity = 0;
 
           if (evolutionStep >= 3) {
@@ -550,7 +549,6 @@
           );
         }
 
-        // DOM 로드 완료 후 안전하게 주입 실행
         const initApp = () => {
           const rootElement = document.getElementById('root');
           if (rootElement && window.ReactDOM && window.React) {
